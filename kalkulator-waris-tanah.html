@@ -1,0 +1,1127 @@
+<!doctype html>
+<html lang="id" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="Icon/logo-umm.png" type="image/png">
+  <title>Ramadani | UMM</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pai: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe',
+              300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6',
+              600: '#1e40af', 700: '#1e3a8a', 800: '#172554', 900: '#0f172a'
+            }
+          },
+          fontFamily: {
+            heading: ['"Playfair Display"', 'serif'],
+            body: ['"DM Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f8faff;
+    }
+
+    /* ---- Animations ---- */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-8px)
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0
+      }
+
+      100% {
+        background-position: 200% 0
+      }
+    }
+
+    .anim-fade-up {
+      animation: fadeUp .6s ease both;
+    }
+
+    .anim-scale-in {
+      animation: scaleIn .5s ease both;
+    }
+
+    .anim-float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* ---- Input styling ---- */
+    .field-input {
+      width: 100%;
+      padding: .65rem 1rem;
+      border: 1.5px solid #dbeafe;
+      border-radius: .75rem;
+      background: #fff;
+      font-size: .875rem;
+      color: #1e3a8a;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+
+    .field-input:focus {
+      border-color: #1e40af;
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, .1);
+    }
+
+    .field-input::placeholder {
+      color: #94a3b8;
+    }
+
+    .field-label {
+      font-size: .75rem;
+      font-weight: 600;
+      color: #1e3a8a;
+      margin-bottom: .35rem;
+      display: block;
+      letter-spacing: .02em;
+    }
+
+    /* ---- Ahli waris card ---- */
+    .waris-card {
+      background: #fff;
+      border: 1.5px solid #dbeafe;
+      border-radius: 1rem;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .waris-card:hover {
+      border-color: #1e40af;
+      box-shadow: 0 4px 20px rgba(30, 64, 175, .08);
+    }
+
+    .waris-toggle {
+      width: 2.75rem;
+      height: 1.5rem;
+      border-radius: 9999px;
+      background: #e2e8f0;
+      cursor: pointer;
+      position: relative;
+      transition: background .25s;
+      flex-shrink: 0;
+    }
+
+    .waris-toggle.on {
+      background: #1e40af;
+    }
+
+    .waris-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+      transition: transform .25s;
+    }
+
+    .waris-toggle.on::after {
+      transform: translateX(18px);
+    }
+
+    .waris-count {
+      width: 2rem;
+      height: 2rem;
+      border-radius: .5rem;
+      border: 1.5px solid #dbeafe;
+      text-align: center;
+      font-size: .85rem;
+      font-weight: 600;
+      color: #1e3a8a;
+      background: #f8faff;
+    }
+
+    .waris-count:focus {
+      outline: none;
+      border-color: #1e40af;
+    }
+
+    /* ---- Result bar ---- */
+    .result-bar {
+      height: 10px;
+      border-radius: 9999px;
+      background: #1e40af;
+      transition: width .8s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    /* ---- Result card ---- */
+    .result-card {
+      background: linear-gradient(135deg, #1e3a8a, #1e40af);
+      border-radius: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .07), transparent);
+      pointer-events: none;
+    }
+
+    /* ---- Shimmer loading ---- */
+    .shimmer {
+      background: linear-gradient(90deg, #f0f4ff 25%, #dbeafe 50%, #f0f4ff 75%);
+      background-size: 200%;
+      animation: shimmer 1.5s infinite;
+      border-radius: .5rem;
+    }
+
+    /* ---- Navbar ---- */
+    .nav-link {
+      position: relative;
+      transition: color .2s;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: width .2s;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* ---- Scrollbar ---- */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #1e40af40;
+      border-radius: 3px;
+    }
+
+    /* ---- Print ---- */
+    @media print {
+
+      nav,
+      .no-print {
+        display: none !important;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .result-card {
+        background: #1e3a8a !important;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+
+    /* ---- Tooltip ---- */
+    [data-tip] {
+      position: relative;
+      cursor: help;
+    }
+
+    [data-tip]:hover::before {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e3a8a;
+      color: #fff;
+      font-size: .7rem;
+      padding: .35rem .65rem;
+      border-radius: .5rem;
+      white-space: nowrap;
+      z-index: 99;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body class="min-h-full">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="fixed top-0 left-0 w-full z-50"
+    style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#1e40af 100%);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+
+        <!-- Brand -->
+        <a href="index.html" class="flex items-center gap-3 no-underline">
+          <div
+            class="w-10 h-10 rounded-full overflow-hidden bg-white/20 backdrop-blur flex items-center justify-center border-2 border-white/30">
+            <img src="Icon/logo-umm.png" alt="logo" class="w-8 h-8 object-contain">
+          </div>
+          <div>
+            <span class="text-white font-bold text-sm sm:text-base block">RAMADANI</span>
+            <span class="hidden sm:block text-white/70 text-xs">Pendidikan Agama Islam</span>
+          </div>
+        </a>
+
+        <!-- Desktop menu -->
+        <div class="hidden lg:flex items-center gap-5">
+          <a href="index.html#beranda" class="nav-link text-white/80 text-sm font-medium hover:text-white">Beranda</a>
+          <a href="index.html#tentang" class="nav-link text-white/80 text-sm font-medium hover:text-white">Tentang</a>
+          <a href="index.html#akademik" class="nav-link text-white/80 text-sm font-medium hover:text-white">Akademik</a>
+          <a href="index.html#profil" class="nav-link text-white/80 text-sm font-medium hover:text-white">Profil</a>
+          <a href="index.html#berita" class="nav-link text-white/80 text-sm font-medium hover:text-white">Berita</a>
+          <a href="evaluasi.html" class="text-white text-sm font-bold border-b-2 border-blue-300 pb-0.5">
+            Evaluasi</a>
+          <a href="index.html" class="btn-back" style="padding:8px 18px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Beranda
+          </a>
+        </div>
+
+        <!-- Mobile toggle -->
+        <div class="lg:hidden flex items-center gap-3">
+          <a href="index.html" class="btn-back" style="padding:7px 14px;font-size:.78rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Kembali
+          </a>
+          <button id="mobile-toggle" class="text-white p-1.5" onclick="toggleMobileNav()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile dropdown menu -->
+    <div id="mobile-nav" class="hidden lg:hidden bg-pai-800/95 backdrop-blur-lg border-t border-white/10">
+      <div class="px-4 py-3 space-y-1">
+        <a href="index.html#beranda"
+          class="block py-2 px-4 text-white/85 rounded-lg hover:bg-white/10 text-sm">Beranda</a>
+        <a href="index.html#tentang"
+          class="block py-2 px-4 text-white/85 rounded-lg hover:bg-white/10 text-sm">Tentang</a>
+        <a href="index.html#akademik"
+          class="block py-2 px-4 text-white/85 rounded-lg hover:bg-white/10 text-sm">Akademik</a>
+        <a href="index.html#profil"
+          class="block py-2 px-4 text-white/85 rounded-lg hover:bg-white/10 text-sm">Profil</a>
+        <a href="index.html#berita"
+          class="block py-2 px-4 text-white/85 rounded-lg hover:bg-white/10 text-sm">Berita</a>
+        <a href="evaluasi.html"
+          class="block py-2 px-4 bg-white/15 text-white rounded-lg text-sm font-semibold">Evaluasi</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section style="background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 55%,#0f172a 100%); padding-top:5rem;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
+      <div class="anim-fade-up">
+        <span
+          class="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-wider mb-5">
+          🏡 Kalkulator Waris
+        </span>
+        <h1 class="font-heading text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+          Kalkulator Warisan<br><span class="text-pai-300">Berdasarkan Harga Tanah</span>
+        </h1>
+        <p class="text-white/65 text-base max-w-2xl mx-auto leading-relaxed">
+          Hitung pembagian harta waris Islam secara otomatis dari nilai tanah. Masukkan data tanah, ahli waris, dan
+          sistem akan menghitung bagian masing-masing sesuai syariat.
+        </p>
+      </div>
+      <!-- Dasar hukum pills -->
+      <div class="flex flex-wrap justify-center gap-3 mt-8 anim-fade-up" style="animation-delay:.2s">
+        <span class="px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white/75 text-xs">📖 QS. An-Nisa:
+          11-12</span>
+        <span class="px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white/75 text-xs">⚖️ Ilmu
+          Faraidh</span>
+        <span class="px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white/75 text-xs">🏡 Berbasis
+          Harga Tanah</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MAIN ===== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <div class="grid lg:grid-cols-2 gap-8">
+
+      <!-- ===== LEFT: INPUT ===== -->
+      <div class="space-y-6">
+
+        <!-- CARD 1: Data Tanah -->
+        <div class="bg-white rounded-2xl shadow-sm border border-pai-100 overflow-hidden anim-fade-up">
+          <div class="px-6 py-4 border-b border-pai-50 flex items-center gap-3"
+            style="background:linear-gradient(135deg,#eff6ff,#dbeafe);">
+            <div class="w-9 h-9 rounded-xl bg-pai-600 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="land-plot" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div>
+              <h2 class="font-heading font-bold text-pai-900 text-base">Data Tanah</h2>
+              <p class="text-pai-500 text-xs">Informasi aset tanah yang akan dibagi waris</p>
+            </div>
+          </div>
+          <div class="p-6 space-y-4">
+
+            <!-- Nama Tanah -->
+            <div>
+              <label class="field-label">Nama / Lokasi Tanah</label>
+              <input id="nama-tanah" type="text" class="field-input"
+                placeholder="cth. Tanah Jl. Soekarno No. 5, Malang">
+            </div>
+
+            <!-- Luas + Satuan -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="field-label">Luas Tanah</label>
+                <input id="luas" type="number" min="0" class="field-input" placeholder="cth. 200"
+                  oninput="hitungOtomatis()">
+              </div>
+              <div>
+                <label class="field-label">Satuan</label>
+                <select id="satuan" class="field-input" onchange="hitungOtomatis()">
+                  <option value="m2">m² (Meter Persegi)</option>
+                  <option value="are">are (1 are = 100 m²)</option>
+                  <option value="hektar">Hektar (1 ha = 10.000 m²)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Harga per m² -->
+            <div>
+              <label class="field-label">Harga per m² <span class="text-pai-400 font-normal">(Rp)</span></label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-pai-500 text-sm font-semibold">Rp</span>
+                <input id="harga-m2" type="number" min="0" class="field-input pl-10" placeholder="cth. 2.500.000"
+                  oninput="hitungOtomatis()">
+              </div>
+            </div>
+
+            <!-- Total Nilai (auto) -->
+            <div class="p-4 rounded-xl border border-pai-200 bg-pai-50">
+              <div class="flex items-center justify-between">
+                <span class="text-pai-700 text-sm font-semibold">Total Nilai Tanah</span>
+                <span id="total-nilai-display" class="font-heading font-bold text-pai-800 text-base">Rp 0</span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-pai-400 text-xs">Luas dalam m²</span>
+                <span id="luas-m2-display" class="text-pai-500 text-xs">0 m²</span>
+              </div>
+            </div>
+
+            <!-- Hutang / Biaya -->
+            <div>
+              <label class="field-label flex items-center gap-1">
+                Hutang / Biaya Lain
+                <span
+                  data-tip="Termasuk biaya pemakaman, hutang pewaris, wasiat (maks 1/3). Akan dikurangi dari total sebelum dibagi."
+                  class="text-pai-300 text-xs">ⓘ</span>
+              </label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-pai-500 text-sm font-semibold">Rp</span>
+                <input id="hutang" type="number" min="0" class="field-input pl-10" placeholder="0"
+                  oninput="hitungOtomatis()">
+              </div>
+            </div>
+
+            <!-- Harta Bersih -->
+            <div class="p-4 rounded-xl border-2 border-pai-600 bg-pai-600/5">
+              <div class="flex items-center justify-between">
+                <span class="text-pai-700 font-bold text-sm">Harta Bersih (Tirkah)</span>
+                <span id="harta-bersih-display" class="font-heading font-bold text-pai-700 text-base">Rp 0</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CARD 2: Ahli Waris -->
+        <div class="bg-white rounded-2xl shadow-sm border border-pai-100 overflow-hidden anim-fade-up"
+          style="animation-delay:.1s">
+          <div class="px-6 py-4 border-b border-pai-50 flex items-center gap-3"
+            style="background:linear-gradient(135deg,#eff6ff,#dbeafe);">
+            <div class="w-9 h-9 rounded-xl bg-pai-600 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="users" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div>
+              <h2 class="font-heading font-bold text-pai-900 text-base">Ahli Waris</h2>
+              <p class="text-pai-500 text-xs">Aktifkan ahli waris yang ada, nonaktifkan yang tidak ada</p>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+
+            <!-- Suami/Istri -->
+            <p class="text-xs font-bold text-pai-400 uppercase tracking-wider pt-1">Pasangan</p>
+
+            <div class="waris-card">
+              <button class="waris-toggle" id="tog-suami" onclick="toggleWaris('suami')"
+                aria-label="Toggle suami"></button>
+              <div class="flex-1 min-w-0">
+                <span class="text-pai-900 text-sm font-semibold">Suami</span>
+                <span class="text-pai-400 text-xs ml-2">Bagian: ¼ atau ½</span>
+              </div>
+              <div class="flex items-center gap-1 opacity-50" id="count-suami-wrap" style="display:none!important">
+                <span class="text-pai-400 text-xs">Jml:</span>
+                <input class="waris-count" type="number" id="n-suami" value="1" min="1" max="4"
+                  oninput="hitungOtomatis()">
+              </div>
+            </div>
+
+            <div class="waris-card">
+              <button class="waris-toggle" id="tog-istri" onclick="toggleWaris('istri')"
+                aria-label="Toggle istri"></button>
+              <div class="flex-1 min-w-0">
+                <span class="text-pai-900 text-sm font-semibold">Istri</span>
+                <span class="text-pai-400 text-xs ml-2">Bagian: ⅛ atau ¼</span>
+              </div>
+              <div class="flex items-center gap-1" id="count-istri-wrap" style="display:none;">
+                <span class="text-pai-400 text-xs">Jml:</span>
+                <input class="waris-count" type="number" id="n-istri" value="1" min="1" max="4"
+                  oninput="hitungOtomatis()">
+              </div>
+            </div>
+
+            <!-- Keturunan -->
+            <p class="text-xs font-bold text-pai-400 uppercase tracking-wider pt-2">Keturunan</p>
+
+            <div class="waris-card">
+              <button class="waris-toggle" id="tog-anak-laki" onclick="toggleWaris('anak-laki')"
+                aria-label="Toggle anak laki"></button>
+              <div class="flex-1 min-w-0">
+                <span class="text-pai-900 text-sm font-semibold">Anak Laki-laki</span>
+                <span class="text-pai-400 text-xs ml-2">2 bagian anak perempuan</span>
+              </div>
+              <div class="flex items-center gap-1" id="count-anak-laki-wrap" style="display:none;">
+                <span class="text-pai-400 text-xs">Jml:</span>
+                <input class="waris-count" type="number" id="n-anak-laki" value="1" min="1" max="20"
+                  oninput="hitungOtomatis()">
+              </div>
+            </div>
+
+            <div class="waris-card">
+              <button class="waris-toggle" id="tog-anak-perempuan" onclick="toggleWaris('anak-perempuan')"
+                aria-label="Toggle anak perempuan"></button>
+              <div class="flex-1 min-w-0">
+                <span class="text-pai-900 text-sm font-semibold">Anak Perempuan</span>
+                <span class="text-pai-400 text-xs ml-2">½, ⅔, atau ashabah</span>
+              </div>
+              <div class="flex items-center gap-1" id="count-anak-perempuan-wrap" style="display:none;">
+                <span class="text-pai-400 text-xs">Jml:</span>
+                <input class="waris-count" type="number" id="n-anak-perempuan" value="1" min="1" max="20"
+                  oninput="hitungOtomatis()">
+              </div>
+            </div>
+
+            <!-- Orang Tua -->
+            <p class="text-xs font-bold text-pai-400 uppercase tracking-wider pt-2">Orang Tua Pewaris</p>
+
+            <div class="waris-card">
+              <button class="waris-toggle" id="tog-ayah" onclick="toggleWaris('ayah')"
+                aria-label="Toggle ayah"></button>
+              <div class="flex-1">
+                <span class="text-pai-900 text-sm font-semibold">Ayah</span>
+                <span class="text-pai-400 text-xs ml-2">⅙ atau ashabah</span>
+              </div>
+            </div>
+
+            <div class="waris-card">
+              <button class="waris-toggle" id="tog-ibu" onclick="toggleWaris('ibu')" aria-label="Toggle ibu"></button>
+              <div class="flex-1">
+                <span class="text-pai-900 text-sm font-semibold">Ibu</span>
+                <span class="text-pai-400 text-xs ml-2">⅙ atau ⅓</span>
+              </div>
+            </div>
+
+            <!-- Saudara -->
+            <p class="text-xs font-bold text-pai-400 uppercase tracking-wider pt-2">Saudara (jika tidak ada anak/ayah)
+            </p>
+
+            <div class="waris-card">
+              <button class="waris-toggle" id="tog-sdrlaki" onclick="toggleWaris('sdrlaki')"
+                aria-label="Toggle saudara laki"></button>
+              <div class="flex-1 min-w-0">
+                <span class="text-pai-900 text-sm font-semibold">Saudara Laki-laki Sekandung</span>
+              </div>
+              <div class="flex items-center gap-1" id="count-sdrlaki-wrap" style="display:none;">
+                <span class="text-pai-400 text-xs">Jml:</span>
+                <input class="waris-count" type="number" id="n-sdrlaki" value="1" min="1" max="20"
+                  oninput="hitungOtomatis()">
+              </div>
+            </div>
+
+            <div class="waris-card">
+              <button class="waris-toggle" id="tog-sdrperempuan" onclick="toggleWaris('sdrperempuan')"
+                aria-label="Toggle saudara perempuan"></button>
+              <div class="flex-1 min-w-0">
+                <span class="text-pai-900 text-sm font-semibold">Saudara Perempuan Sekandung</span>
+                <span class="text-pai-400 text-xs ml-2">½, ⅔, atau ashabah</span>
+              </div>
+              <div class="flex items-center gap-1" id="count-sdrperempuan-wrap" style="display:none;">
+                <span class="text-pai-400 text-xs">Jml:</span>
+                <input class="waris-count" type="number" id="n-sdrperempuan" value="1" min="1" max="20"
+                  oninput="hitungOtomatis()">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tombol Hitung -->
+        <button onclick="hitungWaris()"
+          class="w-full py-4 rounded-2xl font-bold text-white text-base flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 no-print"
+          style="background:linear-gradient(135deg,#1e3a8a,#1e40af);">
+          <i data-lucide="calculator" style="width:20px;height:20px;"></i>
+          Hitung Pembagian Waris
+        </button>
+
+      </div><!-- end LEFT -->
+
+      <!-- ===== RIGHT: OUTPUT ===== -->
+      <div class="space-y-6">
+
+        <!-- Ringkasan Harta -->
+        <div id="panel-ringkasan"
+          class="bg-white rounded-2xl shadow-sm border border-pai-100 overflow-hidden anim-scale-in"
+          style="animation-delay:.15s">
+          <div class="px-6 py-4 border-b border-pai-50 flex items-center gap-3"
+            style="background:linear-gradient(135deg,#1e3a8a,#1e40af);">
+            <i data-lucide="pie-chart" style="width:18px;height:18px;color:#fff;"></i>
+            <h2 class="font-heading font-bold text-white text-base">Ringkasan Harta</h2>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="text-center p-3 rounded-xl bg-pai-50 border border-pai-100">
+                <p class="text-pai-400 text-xs mb-1">Nilai Tanah</p>
+                <p id="sum-nilai" class="font-heading font-bold text-pai-800 text-sm">Rp 0</p>
+              </div>
+              <div class="text-center p-3 rounded-xl bg-red-50 border border-red-100">
+                <p class="text-red-400 text-xs mb-1">Dikurangi</p>
+                <p id="sum-hutang" class="font-heading font-bold text-red-700 text-sm">Rp 0</p>
+              </div>
+              <div class="text-center p-3 rounded-xl bg-green-50 border border-green-100">
+                <p class="text-green-500 text-xs mb-1">Tirkah</p>
+                <p id="sum-bersih" class="font-heading font-bold text-green-700 text-sm">Rp 0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hasil Pembagian -->
+        <div id="panel-hasil" class="bg-white rounded-2xl shadow-sm border border-pai-100 overflow-hidden">
+          <div class="px-6 py-4 border-b border-pai-50 flex items-center gap-3"
+            style="background:linear-gradient(135deg,#1e3a8a,#1e40af);">
+            <i data-lucide="scale" style="width:18px;height:18px;color:#fff;"></i>
+            <h2 class="font-heading font-bold text-white text-base">Hasil Pembagian Waris</h2>
+          </div>
+          <div id="hasil-konten" class="p-6">
+            <!-- Placeholder -->
+            <div class="text-center py-12 text-pai-300">
+              <i data-lucide="scale" style="width:48px;height:48px;margin:0 auto 12px;display:block;opacity:.3;"></i>
+              <p class="text-sm">Isi data tanah dan ahli waris,<br>lalu klik <strong>Hitung</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dasar Hukum -->
+        <div class="bg-white rounded-2xl shadow-sm border border-pai-100 overflow-hidden anim-fade-up"
+          style="animation-delay:.2s">
+          <div class="px-6 py-4 border-b border-pai-50 flex items-center gap-3"
+            style="background:linear-gradient(135deg,#eff6ff,#dbeafe);">
+            <div class="w-9 h-9 rounded-xl bg-pai-600 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="book-open" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <h2 class="font-heading font-bold text-pai-900 text-base">Dasar Hukum</h2>
+          </div>
+          <div class="p-6 space-y-4">
+            <div class="flex gap-3 p-4 rounded-xl bg-pai-50 border border-pai-100">
+              <span class="text-lg flex-shrink-0">📖</span>
+              <div>
+                <p class="text-pai-800 font-semibold text-sm">QS. An-Nisa: 11</p>
+                <p class="text-pai-500 text-xs mt-1 leading-relaxed">Bagian anak laki-laki = dua kali bagian anak
+                  perempuan. Bagian ibu ⅙ jika ada anak, ⅓ jika tidak ada.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 p-4 rounded-xl bg-pai-50 border border-pai-100">
+              <span class="text-lg flex-shrink-0">📖</span>
+              <div>
+                <p class="text-pai-800 font-semibold text-sm">QS. An-Nisa: 12</p>
+                <p class="text-pai-500 text-xs mt-1 leading-relaxed">Suami mendapat ½ jika tidak ada anak, ¼ jika ada.
+                  Istri mendapat ¼ jika tidak ada anak, ⅛ jika ada.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 p-4 rounded-xl bg-amber-50 border border-amber-100">
+              <span class="text-lg flex-shrink-0">⚠️</span>
+              <div>
+                <p class="text-amber-800 font-semibold text-sm">Perhatian</p>
+                <p class="text-amber-600 text-xs mt-1 leading-relaxed">Kalkulator ini bersifat estimasi edukatif. Untuk
+                  kepastian hukum, konsultasikan ke notaris atau Pengadilan Agama setempat.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tombol Cetak -->
+        <button onclick="window.print()"
+          class="w-full py-3.5 rounded-2xl font-semibold text-pai-700 text-sm flex items-center justify-center gap-2 border-2 border-pai-200 hover:border-pai-400 hover:bg-pai-50 transition-all no-print">
+          <i data-lucide="printer" style="width:18px;height:18px;"></i>
+          Cetak / Simpan PDF
+        </button>
+
+      </div><!-- end RIGHT -->
+    </div><!-- end grid -->
+  </main>
+
+  <!-- ==================== Footer ==================== -->
+  <footer class="bg-pai-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid sm:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h4 class="font-heading font-bold text-lg mb-3">RAMADANI PRATAMA</h4>
+          <p class="text-white/60 text-sm leading-relaxed">Pendidikan Agama Islam, Universitas Muhammadiyah Malang</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm mb-3">Tautan Cepat</h4>
+          <div class="space-y-2">
+            <a href="#beranda" class="block text-white/60 text-sm hover:text-white transition-colors">Beranda</a>
+            <a href="evaluasi.html" class="block text-white/60 text-sm hover:text-white transition-colors">Evaluasi</a>
+            <a href="hubungi.html" class="block text-white/60 text-sm hover:text-white transition-colors">Hubungi
+              Kami</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm mb-3">Sosial Media</h4>
+          <div class="flex flex-col gap-3">
+            <a href="https://instagram.com/ramadani.p_" target="_blank" rel="noopener noreferrer">
+              <span
+                class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer">
+                <i data-lucide="instagram" style="width:18px;height:18px;"></i>
+              </span>
+            </a>
+            <a href="https://wa.me/6287835297607" target="_blank" rel="noopener noreferrer">
+              <span
+                class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+            </a>
+            <a href="https://facebook.com/username" target="_blank" rel="noopener noreferrer">
+              <span
+                class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer">
+                <i data-lucide="facebook" style="width:18px;height:18px;"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-white/10 pt-6 text-center text-white/40 text-xs">
+        Copyright &copy; 2026 by Ramadani Pratama UMM | All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    /* =========================================================
+      STATE
+    ========================================================= */
+    const state = {
+      suami: false, istri: false, anak_laki: false,
+      anak_perempuan: false, ayah: false, ibu: false,
+      sdrlaki: false, sdrperempuan: false
+    };
+
+    /* =========================================================
+      TOGGLE AHLI WARIS
+    ========================================================= */
+    function toggleWaris(key) {
+      const k = key.replace(/-/g, '_');
+      state[k] = !state[k];
+      const tog = document.getElementById('tog-' + key);
+      tog.classList.toggle('on', state[k]);
+
+      // Tampilkan count input jika ada
+      const wrap = document.getElementById('count-' + key + '-wrap');
+      if (wrap) wrap.style.display = state[k] ? 'flex' : 'none';
+
+      // Mutual exclusivity: suami <-> istri (opsional, bisa dinonaktifkan)
+      // (dibiarkan fleksibel untuk kasus poligami)
+
+      hitungOtomatis();
+    }
+
+    /* =========================================================
+      FORMAT RUPIAH
+    ========================================================= */
+    function formatRp(n) {
+      if (!isFinite(n) || isNaN(n)) return 'Rp 0';
+      return 'Rp ' + Math.round(n).toLocaleString('id-ID');
+    }
+    function formatRpShort(n) {
+      if (n >= 1e12) return 'Rp ' + (n / 1e12).toFixed(2) + ' T';
+      if (n >= 1e9) return 'Rp ' + (n / 1e9).toFixed(2) + ' M';
+      if (n >= 1e6) return 'Rp ' + (n / 1e6).toFixed(2) + ' jt';
+      return formatRp(n);
+    }
+
+    /* =========================================================
+      HITUNG OTOMATIS (live preview)
+    ========================================================= */
+    function hitungOtomatis() {
+      const luas = parseFloat(document.getElementById('luas').value) || 0;
+      const satuan = document.getElementById('satuan').value;
+      const hargaM2 = parseFloat(document.getElementById('harga-m2').value) || 0;
+      const hutang = parseFloat(document.getElementById('hutang').value) || 0;
+
+      let luasM2 = luas;
+      if (satuan === 'are') luasM2 = luas * 100;
+      if (satuan === 'hektar') luasM2 = luas * 10000;
+
+      const totalNilai = luasM2 * hargaM2;
+      const hartaBersih = Math.max(0, totalNilai - hutang);
+
+      document.getElementById('total-nilai-display').textContent = formatRp(totalNilai);
+      document.getElementById('luas-m2-display').textContent = luasM2.toLocaleString('id-ID') + ' m²';
+      document.getElementById('harta-bersih-display').textContent = formatRp(hartaBersih);
+
+      // Ringkasan panel
+      document.getElementById('sum-nilai').textContent = formatRpShort(totalNilai);
+      document.getElementById('sum-hutang').textContent = formatRpShort(hutang);
+      document.getElementById('sum-bersih').textContent = formatRpShort(hartaBersih);
+    }
+
+    /* =========================================================
+      CORE: HITUNG WARIS (Faraidh)
+    ========================================================= */
+    function hitungWaris() {
+      const luas = parseFloat(document.getElementById('luas').value) || 0;
+      const satuan = document.getElementById('satuan').value;
+      const hargaM2 = parseFloat(document.getElementById('harga-m2').value) || 0;
+      const hutang = parseFloat(document.getElementById('hutang').value) || 0;
+
+      if (luas <= 0 || hargaM2 <= 0) {
+        alert('⚠️ Mohon isi luas tanah dan harga per m² terlebih dahulu.');
+        return;
+      }
+
+      let luasM2 = luas;
+      if (satuan === 'are') luasM2 = luas * 100;
+      if (satuan === 'hektar') luasM2 = luas * 10000;
+
+      const totalNilai = luasM2 * hargaM2;
+      const tirkah = Math.max(0, totalNilai - hutang);
+      const namaTanah = document.getElementById('nama-tanah').value || 'Tanah Warisan';
+
+      // Jumlah ahli waris
+      const nSuami = state.suami ? (parseInt(document.getElementById('n-suami')?.value) || 1) : 0;
+      const nIstri = state.istri ? (parseInt(document.getElementById('n-istri')?.value) || 1) : 0;
+      const nAnakLaki = state.anak_laki ? (parseInt(document.getElementById('n-anak-laki')?.value) || 1) : 0;
+      const nAnakPerempuan = state.anak_perempuan ? (parseInt(document.getElementById('n-anak-perempuan')?.value) || 1) : 0;
+      const nSdrLaki = state.sdrlaki ? (parseInt(document.getElementById('n-sdrlaki')?.value) || 1) : 0;
+      const nSdrPerempuan = state.sdrperempuan ? (parseInt(document.getElementById('n-sdrperempuan')?.value) || 1) : 0;
+      const adaAyah = state.ayah;
+      const adaIbu = state.ibu;
+
+      const adaAnak = nAnakLaki + nAnakPerempuan > 0;
+      const adaSdr = nSdrLaki + nSdrPerempuan > 0;
+
+      /* ----- Tentukan bagian fardh (pecahan dari tirkah) ----- */
+      let bagian = []; // { nama, fardh, jumlah, total_fardh }
+
+      // Suami
+      if (nSuami > 0) {
+        const f = adaAnak ? 1 / 4 : 1 / 2;
+        bagian.push({ nama: 'Suami', fardh: f, jumlah: nSuami, tipe: 'fardh', dasar: adaAnak ? '¼ (ada anak)' : '½ (tidak ada anak)' });
+      }
+      // Istri (dibagi rata jika >1)
+      if (nIstri > 0) {
+        const f = adaAnak ? 1 / 8 : 1 / 4;
+        bagian.push({ nama: 'Istri', fardh: f, jumlah: nIstri, tipe: 'fardh', dasar: adaAnak ? '⅛ (ada anak) dibagi ' + nIstri : '¼ (tidak ada anak) dibagi ' + nIstri });
+      }
+      // Ibu
+      if (adaIbu) {
+        const f = adaAnak ? 1 / 6 : (nSdrLaki + nSdrPerempuan >= 2 ? 1 / 6 : 1 / 3);
+        bagian.push({ nama: 'Ibu', fardh: f, jumlah: 1, tipe: 'fardh', dasar: adaAnak ? '⅙ (ada anak)' : (nSdrLaki + nSdrPerempuan >= 2 ? '⅙ (ada ≥2 saudara)' : '⅓') });
+      }
+      // Ayah
+      if (adaAyah) {
+        if (adaAnak) {
+          // Ayah dapat fardh 1/6, sisanya ashabah (nanti dihitung)
+          bagian.push({ nama: 'Ayah', fardh: 1 / 6, jumlah: 1, tipe: 'fardh+ashabah', dasar: '⅙ + sisa (ada anak)' });
+        } else {
+          // Ayah ashabah saja
+          bagian.push({ nama: 'Ayah', fardh: 0, jumlah: 1, tipe: 'ashabah', dasar: 'Sisa (ashabah, tidak ada anak)' });
+        }
+      }
+
+      // Saudara — hanya berlaku jika tidak ada anak DAN tidak ada ayah
+      if (!adaAnak && !adaAyah) {
+        if (nSdrLaki > 0 && nSdrPerempuan === 0) {
+          // Saudara laki ashabah semua
+          bagian.push({ nama: 'Saudara Laki-laki Sekandung', fardh: 0, jumlah: nSdrLaki, tipe: 'ashabah', dasar: 'Sisa (ashabah)' });
+        } else if (nSdrPerempuan > 0 && nSdrLaki === 0) {
+          // Saudara perempuan tanpa saudara laki: fardh
+          const f = nSdrPerempuan === 1 ? 1 / 2 : 2 / 3;
+          bagian.push({ nama: 'Saudara Perempuan Sekandung', fardh: f, jumlah: nSdrPerempuan, tipe: 'fardh', dasar: nSdrPerempuan === 1 ? '½' : '⅔ (2+)' });
+        } else if (nSdrLaki > 0 && nSdrPerempuan > 0) {
+          // Campuran → ashabah, laki:perempuan = 2:1
+          bagian.push({ nama: 'Saudara Laki-laki Sekandung', fardh: 0, jumlah: nSdrLaki, tipe: 'ashabah-mix-laki', dasar: 'Sisa 2 bagian' });
+          bagian.push({ nama: 'Saudara Perempuan Sekandung', fardh: 0, jumlah: nSdrPerempuan, tipe: 'ashabah-mix-perempuan', dasar: 'Sisa 1 bagian' });
+        }
+      }
+
+      // Anak — ketentuannya:
+      // Jika hanya anak perempuan (tanpa anak laki): fardh ½ atau ⅔
+      // Jika ada anak laki (±anak perempuan): ashabah 2:1
+      if (adaAnak) {
+        if (nAnakLaki > 0) {
+          // Ada anak laki → semua ashabah 2:1
+          if (nAnakLaki > 0) bagian.push({ nama: 'Anak Laki-laki', fardh: 0, jumlah: nAnakLaki, tipe: 'ashabah-mix-laki', dasar: 'Sisa 2 bagian/orang' });
+          if (nAnakPerempuan > 0) bagian.push({ nama: 'Anak Perempuan', fardh: 0, jumlah: nAnakPerempuan, tipe: 'ashabah-mix-perempuan', dasar: 'Sisa 1 bagian/orang' });
+        } else {
+          // Hanya anak perempuan
+          const f = nAnakPerempuan === 1 ? 1 / 2 : 2 / 3;
+          bagian.push({ nama: 'Anak Perempuan', fardh: f, jumlah: nAnakPerempuan, tipe: 'fardh', dasar: nAnakPerempuan === 1 ? '½' : '⅔ (2+)' });
+        }
+      }
+
+      /* ----- Hitung total fardh ----- */
+      let totalFardh = 0;
+      for (const b of bagian) {
+        if (b.tipe === 'fardh' || b.tipe === 'fardh+ashabah') {
+          totalFardh += b.fardh;
+        }
+      }
+
+      /* ----- Sisa (ashabah) ----- */
+      let sisaFardh = Math.max(0, 1 - totalFardh);
+
+      /* ----- Hitung "bobot" ashabah ----- */
+      // Bobot ashabah: laki=2, perempuan=1 per orang (untuk mix)
+      // Bobot ashabah tunggal (ayah saja, dll): seluruh sisa
+      let totalBobotAshabah = 0;
+      for (const b of bagian) {
+        if (b.tipe === 'ashabah') totalBobotAshabah += b.jumlah;
+        if (b.tipe === 'ashabah-mix-laki') totalBobotAshabah += b.jumlah * 2;
+        if (b.tipe === 'ashabah-mix-perempuan') totalBobotAshabah += b.jumlah * 1;
+        if (b.tipe === 'fardh+ashabah') totalBobotAshabah += 1; // ayah dengan fardh + ashabah
+      }
+
+      /* ----- Nilai rupiah per orang ----- */
+      const results = [];
+      for (const b of bagian) {
+        let totalBagianFraksi = 0;
+
+        if (b.tipe === 'fardh') {
+          totalBagianFraksi = b.fardh; // fraksi total untuk group ini
+        } else if (b.tipe === 'fardh+ashabah') {
+          totalBagianFraksi = b.fardh + (totalBobotAshabah > 0 ? sisaFardh * (1 / totalBobotAshabah) : 0);
+        } else if (b.tipe === 'ashabah') {
+          totalBagianFraksi = totalBobotAshabah > 0 ? sisaFardh * (b.jumlah / totalBobotAshabah) : 0;
+        } else if (b.tipe === 'ashabah-mix-laki') {
+          totalBagianFraksi = totalBobotAshabah > 0 ? sisaFardh * (b.jumlah * 2 / totalBobotAshabah) : 0;
+        } else if (b.tipe === 'ashabah-mix-perempuan') {
+          totalBagianFraksi = totalBobotAshabah > 0 ? sisaFardh * (b.jumlah * 1 / totalBobotAshabah) : 0;
+        }
+
+        const totalNilaiGroup = tirkah * totalBagianFraksi;
+        const nilaiPerOrang = b.jumlah > 0 ? totalNilaiGroup / b.jumlah : 0;
+        const luasPerOrang = luasM2 > 0 && totalNilai > 0 ? (nilaiPerOrang / totalNilai) * luasM2 : 0;
+
+        results.push({
+          nama: b.nama,
+          jumlah: b.jumlah,
+          dasar: b.dasar,
+          fraksiGroup: totalBagianFraksi,
+          totalGrup: totalNilaiGroup,
+          nilaiPerOrang: nilaiPerOrang,
+          luasPerOrang: luasPerOrang,
+          persen: totalBagianFraksi * 100,
+        });
+      }
+
+      /* ----- Cek sisa (rajd / kelebihan) ----- */
+      let totalTerpakai = results.reduce((s, r) => s + r.fraksiGroup, 0);
+      let sisaPersen = (1 - totalTerpakai) * 100;
+
+      /* ----- Render ----- */
+      renderHasil(results, tirkah, luasM2, namaTanah, totalNilai, hutang, sisaPersen);
+    }
+
+    /* =========================================================
+      RENDER HASIL
+    ========================================================= */
+    function renderHasil(results, tirkah, luasM2, namaTanah, totalNilai, hutang, sisaPersen) {
+      if (results.length === 0) {
+        document.getElementById('hasil-konten').innerHTML = `
+          <div class="text-center py-10 text-amber-500">
+            <i data-lucide="alert-circle" style="width:40px;height:40px;margin:0 auto 10px;display:block;"></i>
+            <p class="text-sm font-semibold">Tidak ada ahli waris yang dipilih.</p>
+            <p class="text-xs text-amber-400 mt-1">Aktifkan minimal satu ahli waris.</p>
+          </div>`;
+        lucide.createIcons();
+        return;
+      }
+
+      const colors = ['#1e3a8a', '#1e40af', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#0f172a', '#172554'];
+
+      let html = `
+        <div class="space-y-3">
+          <!-- Header info tanah -->
+          <div class="p-4 rounded-xl bg-pai-50 border border-pai-200 mb-4">
+            <p class="text-pai-700 font-semibold text-sm">🏡 ${namaTanah}</p>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <div><span class="text-pai-400 text-xs">Nilai Tanah</span><br><span class="text-pai-800 font-bold text-sm">${formatRp(totalNilai)}</span></div>
+              <div><span class="text-pai-400 text-xs">Hutang/Biaya</span><br><span class="text-red-600 font-bold text-sm">- ${formatRp(hutang)}</span></div>
+              <div><span class="text-pai-400 text-xs">Luas Total</span><br><span class="text-pai-800 font-bold text-sm">${luasM2.toLocaleString('id-ID')} m²</span></div>
+              <div><span class="text-pai-400 text-xs">Tirkah (Dibagi)</span><br><span class="text-green-700 font-bold text-sm">${formatRp(tirkah)}</span></div>
+            </div>
+          </div>`;
+
+      results.forEach((r, i) => {
+        const color = colors[i % colors.length];
+        const pct = Math.min(100, r.persen).toFixed(1);
+        const luasStr = r.luasPerOrang.toFixed(2);
+        html += `
+          <div class="result-card" style="background:linear-gradient(135deg,${color},${color}dd);">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <p class="font-heading font-bold text-white text-base">${r.nama}</p>
+                <p class="text-white/60 text-xs mt-0.5">Dasar: ${r.dasar}</p>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <span class="inline-block px-3 py-1 rounded-full bg-white/15 text-white font-bold text-sm">${pct}%</span>
+              </div>
+            </div>
+            <div class="h-2 rounded-full bg-white/20 mb-3">
+              <div class="result-bar" style="width:${pct}%;background:rgba(255,255,255,0.8);"></div>
+            </div>
+            <div class="grid grid-cols-${r.jumlah > 1 ? '3' : '2'} gap-3">
+              <div class="bg-white/10 rounded-lg p-2 text-center">
+                <p class="text-white/60 text-xs">Total Grup</p>
+                <p class="text-white font-bold text-xs mt-0.5">${formatRpShort(r.totalGrup)}</p>
+              </div>
+              ${r.jumlah > 1 ? `<div class="bg-white/10 rounded-lg p-2 text-center">
+                <p class="text-white/60 text-xs">Per Orang (${r.jumlah})</p>
+                <p class="text-white font-bold text-xs mt-0.5">${formatRpShort(r.nilaiPerOrang)}</p>
+              </div>` : ''}
+              <div class="bg-white/10 rounded-lg p-2 text-center">
+                <p class="text-white/60 text-xs">Luas${r.jumlah > 1 ? '/Orang' : ''}</p>
+                <p class="text-white font-bold text-xs mt-0.5">${luasStr} m²</p>
+              </div>
+            </div>
+          </div>`;
+      });
+
+      // Sisa (jika ada)
+      if (sisaPersen > 0.01) {
+        html += `
+          <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
+            <p class="text-amber-700 font-semibold text-sm flex items-center gap-2">
+              <i data-lucide="info" style="width:16px;height:16px;"></i>
+              Sisa Harta: ${sisaPersen.toFixed(1)}%
+            </p>
+            <p class="text-amber-600 text-xs mt-1">Sisa harta dapat dikembalikan ke ahli waris (Ar-Radd) atau diserahkan ke Baitul Maal sesuai ijtihad ulama.</p>
+          </div>`;
+      }
+
+      html += `
+          <!-- Total check -->
+          <div class="p-4 rounded-xl bg-green-50 border border-green-200 flex items-center justify-between">
+            <span class="text-green-700 font-semibold text-sm">✅ Total Tirkah Terbagi</span>
+            <span class="font-heading font-bold text-green-700">${formatRp(results.reduce((s, r) => s + r.totalGrup, 0))}</span>
+          </div>
+        </div>`;
+
+      document.getElementById('hasil-konten').innerHTML = html;
+      lucide.createIcons();
+      document.getElementById('panel-hasil').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    /* =========================================================
+    INIT
+    ========================================================= */
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      hitungOtomatis();
+    });
+  </script>
+</body>
+
+</html>
